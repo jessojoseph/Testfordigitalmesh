@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Package Details</title>
+  <style>
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 5px;
+      text-align: left;
+    }
+    form {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    form label, form input {
+      margin-bottom: 10px;
+    }
+    form input[type="submit"] {
+      align-self: flex-end;
+    }
+    .error-message {
+      color: red;
+    }
+    #formTable {
+        border:none;
+        border-collapse: collapse;
+      }
+  </style>
+</head>
+<body>
+
+<h2>Package Details</h2>
+<form method="POST" action="{% url 'tour' %}" onsubmit="return validateForm()">
+    {% csrf_token %}
+    <!-- Add an id to the first table for styling -->
+    <table id="formTable">
+      <tr>
+        <td>
+          <label for="packageName">Package Name:</label>
+          <input type="text" id="packageName" name="packageName" >
+        </td>
+        <td>
+          <label for="rate">Rate:</label>
+          <input type="text" id="rate" name="rate" >
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="dateFrom">Date From:</label>
+          <input type="date" id="dateFrom" name="dateFrom" >
+        </td>
+        <td>
+          <label for="dateTo">Date To:</label>
+          <input type="date" id="dateTo" name="dateTo" >
+        </td>
+        <td>
+          <label for="contactNumber">Contact Number:</label>
+          <input type="text" id="contactNumber" name="contactNumber" >
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <input type="submit" value="Add">
+        </td>
+      </tr>
+    </table>
+</form>
+  
+<table>
+  <tr>
+    <th>Package Name</th>
+    <th>Rate</th>
+    <th>Date From</th>
+    <th>Date To</th>
+    <th>Contact Number</th>
+    <th>Places</th>
+    <th>Edit</th>
+    <th>Delete</th>
+  </tr>
+         {% for package in data %}
+            <tr>
+                <td>{{ package.name }}</td>
+                <td>{{ package.rate }}</td>
+                <td>{{ package.date_from }}</td>
+                <td>{{ package.date_to }}</td>
+                <td>{{ package.contact_no }}</td>
+                <td><a href="/add/{{package.pk}}">Add Place</a></td>
+                <td>Edit</td>
+                <td>Delete</td>
+            </tr>
+        {% endfor %}
+</table>
+
+<script>
+  function validateForm() {
+    var packageName = document.getElementById('packageName').value;
+    var rate = document.getElementById('rate').value;
+    var dateFrom = document.getElementById('dateFrom').value;
+    var dateTo = document.getElementById('dateTo').value;
+    var contactNumber = document.getElementById('contactNumber').value;
+
+    if (packageName === '') {
+      alert('Package Name is required');
+      return false;
+    }
+
+    if (rate === '') {
+      alert('Rate is required');
+      return false;
+    } else if (isNaN(rate) || parseFloat(rate) <= 0) {
+        alert( 'Please enter a valid positive number for Rate');
+        return false;
+      }
+
+    if (dateFrom === '') {
+      alert('Date From is required');
+      return false;
+    }
+
+    if (dateTo === '') {
+      alert('Date To is required');
+      return false;
+    }
+
+    if (contactNumber === '') {
+      alert('Contact Number is required');
+      return false;
+    }else if (isNaN(contactNumber) || contactNumber.length !== 10) {
+        alert('Please enter a valid 10-digit Contact Number');
+        return false;
+      }
+
+    // Additional validation logic if needed
+
+    return true; // Form is valid
+  }
+</script>
+
+</body>
+</html>
